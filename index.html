@@ -2,12 +2,29 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport", content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Flappy Bird</title>
         <link rel="stylesheet" href="flappybird.css">
         <script src="flappybird.js"></script>
     </head>
     <body>
         <canvas id="board"></canvas>
+        <div id="startScreen" class="overlay">
+            <h1>Flappy Birdie</h1>
+            <button id="startBtn">Start Game</button>
+            <p>Press SPACE or click Start to begin</p>
+            <h6>Created by Timoy</h6>
+        </div>
+        <div id="gameOverScreen" class="overlay hidden">
+            <h2>Game Over!</h2>
+            <p id="finalScore"></p>
+            <div class="button-group">
+                <button id="restartBtn">Start Again</button>
+                <button id="quitBtn">Quit</button>
+            </div>
+        </div>
+        <div id="thanksMessage" class="overlay hidden">
+            <h2>Thanks for playing my game :)</h2>
+        </div>
     </body>
 </html>

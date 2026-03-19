@@ -35,6 +35,8 @@ let gravity = 0.4;
 
 let gameOver = false;
 let score = 0;
+let gameStarted = false;
+let gameRunning = false;
 
 // ✅ minimum horizontal distance between pipe sets
 let minPipeDistance = 220;
@@ -57,14 +59,34 @@ window.onload = function () {
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./bottompipe.png";
 
-    requestAnimationFrame(update);
-    setInterval(placePipes, 1500);
-    document.addEventListener("keydown", moveBird);
+    // Get UI elements
+    const startScreen = document.getElementById("startScreen");
+    const gameOverScreen = document.getElementById("gameOverScreen");
+    const thanksMessage = document.getElementById("thanksMessage");
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const quitBtn = document.getElementById("quitBtn");
+
+    // Button event listeners
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", startGame);
+    quitBtn.addEventListener("click", quitGame);
+
+    // Keyboard event listener
+    document.addEventListener("keydown", handleKeyPress);
+
+    // Start with the start screen visible
+    showStartScreen();
 };
 
 function update() {
     requestAnimationFrame(update);
-    if (gameOver) return;
+    
+    if (!gameRunning) return;
+    if (gameOver) {
+        handleGameOver();
+        return;
+    }
 
     context.clearRect(0, 0, board.width, board.height);
 
@@ -75,6 +97,7 @@ function update() {
 
     if (bird.y > board.height) {
         gameOver = true;
+        return;
     }
 
     // pipes
@@ -90,6 +113,7 @@ function update() {
 
         if (detectCollision(bird, pipe)) {
             gameOver = true;
+            return;
         }
     }
 
@@ -106,13 +130,6 @@ function update() {
     let scoreText = score.toString();
     let scoreWidth = context.measureText(scoreText).width;
     context.fillText(scoreText, (board.width - scoreWidth) / 2, 50);
-    
-    if (gameOver) {
-        let gameOverText = "GAME OVER";
-        let gameOverWidth = context.measureText(gameOverText).width;
-        context.fillText(gameOverText, (board.width - gameOverWidth) / 2, 100);
-    }
-    
 }
 
 function placePipes() {
@@ -150,17 +167,84 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
-function moveBird(e) {
+function handleKeyPress(e) {
     if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyX") {
-        velocityY = -6;
-
-        if (gameOver) {
-            bird.y = birdY;
-            pipeArray = [];
-            score = 0;
-            gameOver = false;
+        if (!gameStarted) {
+            startGame();
+        } else if (gameRunning && !gameOver) {
+            velocityY = -6;
         }
     }
+}
+
+function moveBird(e) {
+    if (gameRunning && !gameOver && (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyX")) {
+        velocityY = -6;
+    }
+}
+
+function startGame() {
+    // Reset game state
+    gameStarted = true;
+    gameRunning = true;
+    gameOver = false;
+    score = 0;
+    bird.y = birdY;
+    velocityY = 0;
+    pipeArray = [];
+
+    // Hide all screens
+    hideAllScreens();
+
+    // Start game loops
+    requestAnimationFrame(update);
+    setInterval(placePipes, 1500);
+}
+
+function handleGameOver() {
+    gameRunning = false;
+    const gameOverScreen = document.getElementById("gameOverScreen");
+    const finalScore = document.getElementById("finalScore");
+    finalScore.textContent = `Final Score: ${Math.floor(score)}`;
+    gameOverScreen.classList.remove("hidden");
+}
+
+function quitGame() {
+    console.log("Quit game called");
+    hideAllScreens();
+    const thanksMessage = document.getElementById("thanksMessage");
+    thanksMessage.classList.remove("hidden");
+    
+    // Stop the game
+    gameRunning = false;
+    gameStarted = false;
+    
+    // Clear the canvas
+    context.clearRect(0, 0, board.width, board.height);
+    
+    // Redirect to main menu after 3 seconds
+    console.log("Setting 3-second timeout to return to main menu");
+    setTimeout(() => {
+        console.log("Timeout triggered - showing start screen");
+        showStartScreen();
+    }, 3000);
+}
+
+function showStartScreen() {
+    console.log("showStartScreen called");
+    // Hide only game over and thanks screens, not the start screen
+    document.getElementById("gameOverScreen").classList.add("hidden");
+    document.getElementById("thanksMessage").classList.add("hidden");
+    
+    const startScreen = document.getElementById("startScreen");
+    startScreen.classList.remove("hidden");
+    console.log("Start screen should now be visible");
+}
+
+function hideAllScreens() {
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("gameOverScreen").classList.add("hidden");
+    document.getElementById("thanksMessage").classList.add("hidden");
 }
 
 function detectCollision(a, b) {

@@ -1,9 +1,99 @@
 body {
     font-family:'Courier New', Courier, monospace;
     text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #70c5ce;
 }
 
 #board {
     /* background-color: skyblue; */
     background-image: url("./flappybirdbg.png");
+    display: block;
+    margin: 0 auto;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 10;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+    color: #ffeb3b;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.overlay h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.overlay p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #ffffff;
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+#startBtn, #restartBtn {
+    background-color: #4caf50;
+    color: white;
+}
+
+#startBtn:hover, #restartBtn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+#quitBtn {
+    background-color: #f44336;
+    color: white;
+}
+
+#quitBtn:hover {
+    background-color: #da190b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+#finalScore {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffeb3b;
 }
